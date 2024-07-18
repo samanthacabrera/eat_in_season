@@ -9,7 +9,7 @@ function Location() {
           console.log('Latitude:', latitude, 'Longitude:', longitude);
 
           try {
-            const response = await fetch('/save_location', {
+            const response = await fetch('api/save_location', {
               method: 'POST',
               headers: {
                 'Content-Type': 'application/json',

@@ -5,14 +5,14 @@ from dotenv import load_dotenv
 from supabase import create_client, Client
 
 # Load environment variables from .env file
-load_dotenv()
+load_dotenv(dotenv_path=os.path.join(os.path.dirname(__file__), '.env'))
 
 app = Flask(__name__)
-CORS(app)
+CORS(app, resources={r"/*": {"origins": "http://localhost:3000"}})
 
 # Retrieve environment variables
-url = os.environ.get("SUPABASE_URL")
-key = os.environ.get("SUPABASE_KEY")
+url: str = os.getenv("SUPABASE_URL")
+key: str = os.getenv("SUPABASE_KEY")
 
 # Check if the environment variables are set
 if not url or not key:
@@ -34,15 +34,21 @@ def save_location():
         latitude = data.get('latitude')
         longitude = data.get('longitude')
 
-        if not latitude or not longitude:
+        if latitude is None or longitude is None:
             return jsonify({
                 'error': 'Latitude and longitude are required'
             }), 400
 
+        # Insert location into Supabase
         response = supabase.table('users').insert({'latitude': latitude, 'longitude': longitude}).execute()
+        
+        # Print the entire response object to debug
+        print(f"Supabase Response: {response}")
 
-        if response.error:
+        # Check if there is an error in the response
+        if hasattr(response, 'error') and response.error:
             error_message = response.error.message if response.error.message else 'Unknown error'
+            print(f"Supabase Error: {error_message}")
             return jsonify({
                 'error': 'Failed to save location',
                 'details': error_message
@@ -54,6 +60,7 @@ def save_location():
             'longitude': longitude
         }), 201
     except Exception as e:
+        print(f"Exception: {str(e)}")
         return jsonify({
             'error': str(e)
         }), 500
