@@ -37,8 +37,13 @@ function Location() {
   };
 
   return (
-    <div>
-      <button onClick={handleGetLocation}>Get My Location</button>
+    <div className="flex items-center justify-center min-h-screen">
+      <button
+        onClick={handleGetLocation}
+        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+      >
+        Get My Location
+      </button>
     </div>
   );
 }

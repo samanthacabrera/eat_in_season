@@ -124,5 +124,93 @@ def save_location():
             'error': str(e)
         }), 500
 
+
+
+@app.route('/get_crops', methods=['POST'])
+def get_crops():
+    try:
+        data = request.get_json()
+        latitude = data.get('latitude')
+        longitude = data.get('longitude')
+
+        if latitude is None or longitude is None:
+            return jsonify({
+                'error': 'Latitude and longitude are required'
+            }), 400
+
+        # Determine the region for the coordinates
+        region_response = supabase.table('regions').select('id', 'name').filter(
+            'min_lat', 'lte', latitude
+        ).filter(
+            'max_lat', 'gte', latitude
+        ).filter(
+            'min_lon', 'lte', longitude
+        ).filter(
+            'max_lon', 'gte', longitude
+        ).execute()
+        print(f"Region Response: {region_response}")
+
+        # Check if there is an error in the response
+        if hasattr(region_response, 'error') and region_response.error:
+            error_message = region_response.error.message if region_response.error.message else 'Unknown error'
+            print(f"Region Response Error: {error_message}")
+            return jsonify({
+                'error': 'Failed to determine region',
+                'details': error_message
+            }), 500
+
+        if not region_response.data:
+            return jsonify({
+                'error': 'Region not found'
+            }), 404
+
+        region = region_response.data[0]
+        region_id = region['id']
+
+        # Retrieve crop IDs for the region
+        crops_ids_response = supabase.table('crops_regions').select('crop_id').filter(
+            'region_id', 'eq', region_id
+        ).execute()
+        print(f"Crops IDs Response: {crops_ids_response}")
+
+        # Check if there is an error in the response
+        if hasattr(crops_ids_response, 'error') and crops_ids_response.error:
+            error_message = crops_ids_response.error.message if crops_ids_response.error.message else 'Unknown error'
+            print(f"Crops IDs Response Error: {error_message}")
+            return jsonify({
+                'error': 'Failed to retrieve crop IDs',
+                'details': error_message
+            }), 500
+
+        crop_ids = [item['crop_id'] for item in crops_ids_response.data]
+
+        # Retrieve crop details for the crop IDs
+        if crop_ids:  # Only proceed if there are crop IDs to filter
+            crops_response = supabase.table('crops').select('*').in_('id', crop_ids).execute()
+            print(f"Crops Response: {crops_response}")
+
+            # Check if there is an error in the response
+            if hasattr(crops_response, 'error') and crops_response.error:
+                error_message = crops_response.error.message if crops_response.error.message else 'Unknown error'
+                print(f"Crops Response Error: {error_message}")
+                return jsonify({
+                    'error': 'Failed to retrieve crops',
+                    'details': error_message
+                }), 500
+        else:
+            crops_response = {'data': []}
+
+        return jsonify({
+            'region': region['name'],
+            'crops': crops_response.data
+        }), 200
+
+    except Exception as e:
+        print(f"Exception: {str(e)}")
+        return jsonify({
+            'error': str(e)
+        }), 500
+
+
 if __name__ == "__main__":
     app.run(debug=True)

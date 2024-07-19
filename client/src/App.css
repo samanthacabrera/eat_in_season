@@ -7,3 +7,22 @@ html {
   margin: 0;
   padding: 0;
 }
+
+.filter-section {
+  margin-bottom: 1rem;
+}
+
+.filter-button {
+  display: block;
+  width: 100%;
+  padding: 0.5rem;
+  text-align: left;
+  border: none;
+  background: none;
+  cursor: pointer;
+}
+
+.filter-button:hover,
+.filter-button.active {
+  background-color: #e2e8f0;
+}
