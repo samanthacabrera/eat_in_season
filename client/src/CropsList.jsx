@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import CropCard from './CropCard';
 import TypeFilter from './TypeFilter';
 import DateFilter from './DateFilter';
 
@@ -63,11 +62,11 @@ const CropsList = () => {
     let filtered = crops;
 
     if (selectedType !== 'All') {
-      filtered = filtered.filter((crop) => crop.type === selectedType.toLowerCase());
+      filtered = filtered.filter((crop) => crop.type && crop.type.toLowerCase() === selectedType.toLowerCase());
     }
 
     if (selectedSeason) {
-      filtered = filtered.filter((crop) => crop.season === selectedSeason.toLowerCase());
+      filtered = filtered.filter((crop) => crop.season && crop.season.toLowerCase() === selectedSeason.toLowerCase());
     }
 
     setFilteredCrops(filtered);
@@ -81,34 +80,19 @@ const CropsList = () => {
     return <p>Error loading crops: {error.message}</p>;
   }
 
-  const containerStyle = {
-    display: 'flex',
-    padding: '1rem'
-  };
-
-  const filterSectionStyle = {
-    width: '20%',
-    paddingRight: '1rem'
-  };
-
-  const cropListStyle = {
-    width: '60%',
-    display: 'flex',
-    flexWrap: 'wrap',
-    justifyContent: 'center'
-  };
-
   return (
-    <div style={containerStyle}>
-      <div style={filterSectionStyle}>
+    <div className="flex p-4">
+      <div className="w-1/5 pr-4">
         <TypeFilter selectedType={selectedType} onSelectType={setSelectedType} />
       </div>
-      <div style={cropListStyle}>
+      <ul className="w-3/5 flex flex-wrap justify-center">
         {filteredCrops.map((crop) => (
-          <CropCard key={crop.id} crop={crop} />
+          <li key={crop.id} className="bg-white rounded-lg shadow-md m-2 p-4 list-none">
+            <p className="text-lg font-semibold text-gray-800">{crop.name}</p>
+          </li>
         ))}
-      </div>
-      <div style={filterSectionStyle}>
+      </ul>
+      <div className="w-1/5 pl-4">
         <DateFilter selectedSeason={selectedSeason} onSelectSeason={setSelectedSeason} />
       </div>
     </div>
