@@ -1,16 +1,23 @@
 import Location from './Location';
 import CropsList from './CropsList';
+import Footer from './Footer';
 import '././App.css'
 
 function App() {
 
   return (
-    <div>
+    <>
+    <section className="flex align-center justify-between m-12 p-4">
       <h1 className="text-4xl">eat by season</h1>
       <Location />
-      <CropsList/>
-    </div>
-  );
+    </section>
+
+    <section>
+      <CropsList />
+      <Footer />
+    </section>
+    </>
+  )
 }
 
 export default App;

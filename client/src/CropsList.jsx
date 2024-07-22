@@ -81,14 +81,15 @@ const CropsList = () => {
   }
 
   return (
-    <div className="flex p-4">
+    <div className="flex m-12 p-4">
       <div className="w-1/5 pr-4">
         <TypeFilter selectedType={selectedType} onSelectType={setSelectedType} />
       </div>
-      <ul className="w-3/5 flex flex-wrap justify-center">
+      <ul className="w-3/5 flex flex-col justify-center items-center space-y-8">
+        <h2 className="text-xl">Check out your local produce market for...</h2>
         {filteredCrops.map((crop) => (
-          <li key={crop.id} className="bg-white rounded-lg shadow-md m-2 p-4 list-none">
-            <p className="text-lg font-semibold text-gray-800">{crop.name}</p>
+          <li key={crop.id} className="w-fit border border-2 border-orange-400 bg-orange-50 rounded-lg py-2 px-2 list-none">
+            <p className="text-xl text-gray-800">{crop.name}</p>
           </li>
         ))}
       </ul>
