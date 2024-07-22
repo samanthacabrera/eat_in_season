@@ -60,6 +60,8 @@ const CropsList = () => {
 
   const filterCrops = () => {
     let filtered = crops;
+    // console.log('Selected Type:', selectedType);
+    // console.log('Selected Season:', selectedSeason);
 
     if (selectedType !== 'All') {
       filtered = filtered.filter((crop) => crop.type && crop.type.toLowerCase() === selectedType.toLowerCase());

@@ -1,10 +1,11 @@
 import React from 'react';
 
+const types = ['All', 'Vegetable', 'Fruit'];
+
 const TypeFilter = ({ selectedType, onSelectType }) => {
-  const types = ['All', 'Vegetables', 'Fruits'];
 
   return (
-    <div className="filter-section">
+    <>
       <ul>
         {types.map((type) => (
           <li key={type}>
@@ -17,7 +18,7 @@ const TypeFilter = ({ selectedType, onSelectType }) => {
           </li>
         ))}
       </ul>
-    </div>
+    </>
   );
 };
 

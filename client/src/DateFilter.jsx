@@ -4,10 +4,10 @@ const seasons = ['Winter', 'Spring', 'Summer', 'Fall'];
 
 const DateFilter = ({ selectedSeason, onSelectSeason }) => {
   return (
-    <div className="filter-section">
-      <ul className="filter-list">
+    <>
+      <ul>
         {seasons.map((season) => (
-          <li key={season} className="filter-item">
+          <li key={season}>
             <button
               className={`filter-button ${selectedSeason === season ? 'active' : ''}`}
               onClick={() => onSelectSeason(season)}
@@ -17,7 +17,7 @@ const DateFilter = ({ selectedSeason, onSelectSeason }) => {
           </li>
         ))}
       </ul>
-    </div>
+    </>
   );
 };
 
