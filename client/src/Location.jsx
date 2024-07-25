@@ -1,12 +1,17 @@
-import React from 'react';
+import React, { useState } from 'react';
 
-function Location() {
+function Location({ onRegionUpdate }) {
+  const [loading, setLoading] = useState(false);
+  const [region, setRegion] = useState(null);
+  const [error, setError] = useState(null);
+
   const handleGetLocation = () => {
     if ('geolocation' in navigator) {
+      setLoading(true);
+      setError(null);
       navigator.geolocation.getCurrentPosition(
         async (position) => {
           const { latitude, longitude } = position.coords;
-          console.log('Latitude:', latitude, 'Longitude:', longitude);
 
           try {
             const response = await fetch('api/save_location', {
@@ -22,28 +27,37 @@ function Location() {
             }
 
             const data = await response.json();
-            console.log('Location saved:', data);
+            if (data.region) {
+              setRegion(`Location: ${data.region}`);
+              onRegionUpdate(data.region); // Notify parent component of region update
+            } else {
+              setRegion('Location: Region not found');
+            }
           } catch (error) {
             console.error('Error saving location:', error);
+            setError('Error saving location');
+          } finally {
+            setLoading(false);
           }
         },
         (error) => {
           console.error('Error getting location:', error);
+          setError('Error getting location');
+          setLoading(false);
         }
       );
     } else {
       console.log('Geolocation is not supported by this browser.');
+      setError('Geolocation is not supported by this browser.');
     }
   };
 
   return (
     <div>
-      <button
-        onClick={handleGetLocation}
-        className="location-button"
-      >
-        Get My Location
+      <button onClick={handleGetLocation} className="location-button">
+        {loading ? 'Loading...' : region || 'Get My Location'}
       </button>
+      {error && <p>{error}</p>}
     </div>
   );
 }

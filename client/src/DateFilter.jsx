@@ -1,6 +1,6 @@
 import React from 'react';
 
-const seasons = ['Winter', 'Spring', 'Summer', 'Fall'];
+const seasons = ['All','Winter', 'Spring', 'Summer', 'Fall'];
 
 const DateFilter = ({ selectedSeason, onSelectSeason }) => {
   return (

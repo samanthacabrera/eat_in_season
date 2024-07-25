@@ -1,6 +1,6 @@
 import React from 'react';
 
-const types = ['All', 'Vegetable', 'Fruit'];
+const types = ['All', 'Vegetable', 'Fruit', 'Herb'];
 
 const TypeFilter = ({ selectedType, onSelectType }) => {
 
